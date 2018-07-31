@@ -1,0 +1,28 @@
+.case {
+    width: 100px;
+    height: 100px;
+    margin: 1px;
+    background-color: lightgreen;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.colonne {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#grille {
+    display: flex;
+}
+
+.jeton {
+    border-radius: 50px;
+}
+.jeton1 {
+    background-color: lightskyblue;
+}
+.jeton2 {
+    background-color: lightcoral;
+}
