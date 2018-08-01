@@ -37,23 +37,58 @@ function isOverWithPlateau() {
     
     for (var i = 0; i < 7; i++) {
         for (var j = 0; j < 6; j++) {
-            if(plateau[i][j] == joueurMain){
-                for (var dx = -1; i < 2; i++) {
-                    for (var dy = -1; j < 2; j++) {
-                        
-                    }
-                }    
+            if (plateau[i][j] == joueurMain){
+                suiteGagnante = 1;
+                checkSuiteOnPlateau(i,j);
             }
+        }
+    }
+}    
+
+function checkSuite(x,y,dx,dy){
+    console.log('checkSuite(x,y,dx,dy)');
+
+    if (plateau[x + dx][y + dy] == joueurMain){
+        suiteGagnante++;
+        
+        if (suiteGagnante == 4){
+            alert('gg');
+            return;
+        }
+        checkSuite(x + dx, y + dy, dx, dy);      
+    }
+}
+
+function checkSuiteOnPlateau(x,y) {
+    console.log('checkSuiteOnPlateau(x,y)');
+    console.log('BEFORE - Suite = ' + suiteGagnante);
+    for (var dx = -1; dx < 2; dx++){
+        for(var dy = -1; dy < 2; dy++) {
+            console.log('dx/dy ' + dx + '/' + dy);
+            if (dx != 0 || dy != 0){
+                console.log('MIDDLE - Suite = ' + suiteGagnante);
+
+                if (plateau[x + dx][y + dy] === joueurMain){
+                    console.log('AFTER - Suite = ' + suiteGagnante);
+                    suiteGagnante++;
+                    
+                    checkSuite(x + dx,y + dy,dx,dy);
+               }
+               else {
+                   suiteGagnante = 0;
+               }
+           }
+           else {
+               suiteGagnante = 0;
+           }
         }
     }
 }
 
-function checkSuiteOnPlateau() {
-    
-}
-
 
 function initialisation() {
+    initPlateau();
+    
     var htmlGenere = ' ';
     
     for (var i = 0; i < 7; i++) {
@@ -77,8 +112,10 @@ function jouer(e) {
     
     var indiceLigne = parseInt(caseLibre.attr('valeur'));
     var indiceColonne = parseInt($(e.target).parent().attr('valeur'));
+    jouerPlateau(indiceColonne,indiceLigne);
+    //checkIsOver(joueurMain, indiceColonne, indiceLigne);
     
-    checkIsOver(joueurMain, indiceColonne, indiceLigne);
+    isOverWithPlateau();
     
     if (joueurMain === '1'){
         joueurMain = '2';
@@ -102,8 +139,6 @@ function checkDirection(joueurJeton, indiceColonne, indiceLigne, dX, dY, suite) 
         
     
 }
-
-
 
 function checkIsOver(idJoueur, indiceColonne, indiceLigne){
     var joueurJeton = 'jeton' + idJoueur;
@@ -139,10 +174,6 @@ function checkIsOver(idJoueur, indiceColonne, indiceLigne){
     }
 }
 
-function isGameOver() {
-    
-    
-    
-}
+
 
 initialisation();
