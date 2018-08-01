@@ -1,12 +1,3 @@
-//var plateau = [];
-//plateau.fill(0);
-//
-//for (var i = 0; i < 7; i++) {
-//    var tab = [];
-//    
-//    plateau.push(tab);
-//}
-
 var joueur1 = '1';
 var joueur2 = '2';
 
@@ -17,15 +8,22 @@ var plateau = [];
 
 function initPlateau() {
     
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 9; i++) {
         var colonne = [];
         
-        for (var j = 0; j < 6; j++) {
+        for (var j = 0; j < 8; j++) {
             colonne.push(-1);
         }
         plateau.push(colonne);
     }
-    
+    for (var i = 0; i < 8; i++) {
+        plateau[0][i] = 0;
+        plateau[8][i] = 0;
+    }
+    for (var i = 0; i < 9; i++) {
+        plateau[i][0] = 0;
+        plateau[i][7] = 0;
+    }
     return plateau;
 }
 
@@ -46,32 +44,26 @@ function isOverWithPlateau() {
 }    
 
 function checkSuite(x,y,dx,dy){
-    console.log('checkSuite(x,y,dx,dy)');
-
     if (plateau[x + dx][y + dy] == joueurMain){
         suiteGagnante++;
-        
-        if (suiteGagnante == 4){
+
+        if (suiteGagnante === 4){
             alert('gg');
             return;
         }
-        checkSuite(x + dx, y + dy, dx, dy);      
+        if (plateau[x+dx][y+dy] >= 0){
+            checkSuite(x + dx, y + dy, dx, dy);      
+        }
     }
 }
 
 function checkSuiteOnPlateau(x,y) {
-    console.log('checkSuiteOnPlateau(x,y)');
-    console.log('BEFORE - Suite = ' + suiteGagnante);
-    for (var dx = -1; dx < 2; dx++){
-        for(var dy = -1; dy < 2; dy++) {
-            console.log('dx/dy ' + dx + '/' + dy);
-            if (dx != 0 || dy != 0){
-                console.log('MIDDLE - Suite = ' + suiteGagnante);
+    for (var dx = -1; dx <= 1; dx++){
+        for(var dy = -1; dy <= 1; dy++) {
+            if ((dx != 0 || dy != 0) && plateau[x+dx][y+dy] >= 0){
 
                 if (plateau[x + dx][y + dy] === joueurMain){
-                    console.log('AFTER - Suite = ' + suiteGagnante);
-                    suiteGagnante++;
-                    
+                    suiteGagnante = 2;
                     checkSuite(x + dx,y + dy,dx,dy);
                }
                else {
@@ -123,56 +115,54 @@ function jouer(e) {
         joueurMain = '1';
     }
 }
-
-function checkDirection(joueurJeton, indiceColonne, indiceLigne, dX, dY, suite) {
-    var carre = $('.colonne[valeur="' + (indiceColonne + dX) + '"] > [valeur="' + (indiceLigne + dY) + '"]');
-    
-    if (carre.hasClass(joueurJeton)){
-        suite++;
-        
-        if (suite == 4){
-            alert('GG');
-            return;
-        }
-        checkDirection(joueurJeton,(indiceColonne + dX), (indiceLigne + dY), dX, dY, suite);
-    }
-        
-    
-}
-
-function checkIsOver(idJoueur, indiceColonne, indiceLigne){
-    var joueurJeton = 'jeton' + idJoueur;
-    var max = 1;
-    
-    for (var i = -1; i <= max; i++) {
-        for (var j = -1; j <= max; j++) {
-            
-            if (!(i === 0 && j === 0)){
-                
-                var carre = $('.colonne[valeur="' + (indiceColonne + i) + '"] > [valeur="' + (indiceLigne + j) + '"]');
-                
-//                console.log('i : ' + i + '  --- j : ' +j);
-//                console.log('Carre actuel : ' + carre.attr('valeur'));
-//                console.log('  Indice Colonne - ' + indiceColonne);
-//                console.log('  Indice Ligne - ' + indiceLigne);
-
-                if (carre.hasClass(joueurJeton)){
-                    checkDirection(joueurJeton, indiceColonne, indiceLigne, dX, dY, suiteGagnante + 1);
-                }
-                else if (suiteGagnante === 4){
-                    alert('Gagnée par joueur ' + joueurMain);
-                    return;
-                }
-                else {                
-                    console.log('NUL');
-                    suiteGagnante = 0;
-                }
-
-                console.log('\n');
-            }    
-        }
-    }
-}
+//
+//function checkDirection(joueurJeton, indiceColonne, indiceLigne, dX, dY, suite) {
+//    var carre = $('.colonne[valeur="' + (indiceColonne + dX) + '"] > [valeur="' + (indiceLigne + dY) + '"]');
+//    
+//    if (carre.hasClass(joueurJeton)){
+//        suite++;
+//        
+//        if (suite == 4){
+//            alert('GG');
+//            return;
+//        }
+//        checkDirection(joueurJeton,(indiceColonne + dX), (indiceLigne + dY), dX, dY, suite);
+//    }
+//}
+//
+//function checkIsOver(idJoueur, indiceColonne, indiceLigne){
+//    var joueurJeton = 'jeton' + idJoueur;
+//    var max = 1;
+//    
+//    for (var i = -1; i <= max; i++) {
+//        for (var j = -1; j <= max; j++) {
+//            
+//            if (!(i === 0 && j === 0)){
+//                
+//                var carre = $('.colonne[valeur="' + (indiceColonne + i) + '"] > [valeur="' + (indiceLigne + j) + '"]');
+//                
+////                console.log('i : ' + i + '  --- j : ' +j);
+////                console.log('Carre actuel : ' + carre.attr('valeur'));
+////                console.log('  Indice Colonne - ' + indiceColonne);
+////                console.log('  Indice Ligne - ' + indiceLigne);
+//
+//                if (carre.hasClass(joueurJeton)){
+//                    checkDirection(joueurJeton, indiceColonne, indiceLigne, dX, dY, suiteGagnante + 1);
+//                }
+//                else if (suiteGagnante === 4){
+//                    alert('Gagnée par joueur ' + joueurMain);
+//                    return;
+//                }
+//                else {                
+//                    console.log('NUL');
+//                    suiteGagnante = 0;
+//                }
+//
+//                console.log('\n');
+//            }    
+//        }
+//    }
+//}
 
 
 
