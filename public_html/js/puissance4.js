@@ -13,6 +13,44 @@ var joueur2 = '2';
 var joueurMain = '1';
 var suiteGagnante = 0;
 
+var plateau = [];
+
+function initPlateau() {
+    
+    for (var i = 0; i < 7; i++) {
+        var colonne = [];
+        
+        for (var j = 0; j < 6; j++) {
+            colonne.push(-1);
+        }
+        plateau.push(colonne);
+    }
+    
+    return plateau;
+}
+
+function jouerPlateau(colonne,ligne) {
+    plateau[colonne][ligne] = joueurMain;
+}
+
+function isOverWithPlateau() {
+    
+    for (var i = 0; i < 7; i++) {
+        for (var j = 0; j < 6; j++) {
+            if(plateau[i][j] == joueurMain){
+                for (var dx = -1; i < 2; i++) {
+                    for (var dy = -1; j < 2; j++) {
+                        
+                    }
+                }    
+            }
+        }
+    }
+}
+
+function checkSuiteOnPlateau() {
+    
+}
 
 
 function initialisation() {
@@ -37,6 +75,11 @@ function jouer(e) {
     caseLibre.addClass('jeton');
     caseLibre.addClass(jeton);
     
+    var indiceLigne = parseInt(caseLibre.attr('valeur'));
+    var indiceColonne = parseInt($(e.target).parent().attr('valeur'));
+    
+    checkIsOver(joueurMain, indiceColonne, indiceLigne);
+    
     if (joueurMain === '1'){
         joueurMain = '2';
     } else {
@@ -44,37 +87,62 @@ function jouer(e) {
     }
 }
 
-function isOver(e) {
-    var carreColonne = $(e.target).parent();
+function checkDirection(joueurJeton, indiceColonne, indiceLigne, dX, dY, suite) {
+    var carre = $('.colonne[valeur="' + (indiceColonne + dX) + '"] > [valeur="' + (indiceLigne + dY) + '"]');
     
-    var carre = carreColonne.children().filter("div:not(.jeton):first");
-    
-    
-    var indiceLigne = carre.attr('valeur');
-    var indiceColonne = carreColonne.attr('valeur');
-    
-    checkIsOver(joueurMain, indiceColonne, indiceLigne);
-    
+    if (carre.hasClass(joueurJeton)){
+        suite++;
+        
+        if (suite == 4){
+            alert('GG');
+            return;
+        }
+        checkDirection(joueurJeton,(indiceColonne + dX), (indiceLigne + dY), dX, dY, suite);
+    }
+        
     
 }
 
+
+
 function checkIsOver(idJoueur, indiceColonne, indiceLigne){
-    var joueurJeton = '.jeton' + idJoueur;
-    var max = 2;
+    var joueurJeton = 'jeton' + idJoueur;
+    var max = 1;
     
-    for (var i = -1; i < max; i++) {
-        for (var j = -1; j < max; j++) {
-     
-            var carre = $(""
-                    + [valeur=indiceColonne] 
-                    + " " 
-                    + [valeur=indiceLigne]);
+    for (var i = -1; i <= max; i++) {
+        for (var j = -1; j <= max; j++) {
             
-            if (carre.hasClass(joueurJeton)){
-                checkIsOver(idJoueur,indiceColonne + i,indiceLigne + j);
-            }
+            if (!(i === 0 && j === 0)){
+                
+                var carre = $('.colonne[valeur="' + (indiceColonne + i) + '"] > [valeur="' + (indiceLigne + j) + '"]');
+                
+//                console.log('i : ' + i + '  --- j : ' +j);
+//                console.log('Carre actuel : ' + carre.attr('valeur'));
+//                console.log('  Indice Colonne - ' + indiceColonne);
+//                console.log('  Indice Ligne - ' + indiceLigne);
+
+                if (carre.hasClass(joueurJeton)){
+                    checkDirection(joueurJeton, indiceColonne, indiceLigne, dX, dY, suiteGagnante + 1);
+                }
+                else if (suiteGagnante === 4){
+                    alert('Gagnée par joueur ' + joueurMain);
+                    return;
+                }
+                else {                
+                    console.log('NUL');
+                    suiteGagnante = 0;
+                }
+
+                console.log('\n');
+            }    
         }
     }
+}
+
+function isGameOver() {
+    
+    
+    
 }
 
 initialisation();
